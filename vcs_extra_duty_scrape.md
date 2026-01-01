@@ -3,7 +3,7 @@
 ## Full Script
 
 ```python
-# ðŸ•’ 2025-12-03-11-00-00
+# 🕒 2025-12-03-11-00-00
 
 # Extra_Duty/scripts/vcs_extra_duty_scrape.py
 
@@ -11,7 +11,7 @@
 
 # Purpose: Selenium scraper for VCS Extra Duty portal - extracts job grid data to timestamped CSVs for downstream processing
 
-# â€œâ€â€
+# “””
 VCS Extra Duty Scraper
 
 Attaches to a running Chrome instance, scrapes the Extra Duty job grid,
@@ -19,17 +19,17 @@ and saves timestamped CSVs for the post-processor.
 
 Prerequisites:
 1. Start Chrome with remote debugging:
-chrome.exe â€“remote-debugging-port=9222 â€“user-data-dir=â€œC:\ChromeDebugâ€
+chrome.exe –remote-debugging-port=9222 –user-data-dir=“C:\ChromeDebug”
 2. Log into VCS portal manually
 3. Navigate to Extra Duty Signup page
 4. Then run this script
 
 Usage:
 python vcs_extra_duty_scrape.py                    # Default: Q4 2025
-python vcs_extra_duty_scrape.py â€“mode q4          # Q4 only
-python vcs_extra_duty_scrape.py â€“mode full_year   # All of 2025
-python vcs_extra_duty_scrape.py â€“mode month â€“month 11  # November only
-â€œâ€â€
+python vcs_extra_duty_scrape.py –mode q4          # Q4 only
+python vcs_extra_duty_scrape.py –mode full_year   # All of 2025
+python vcs_extra_duty_scrape.py –mode month –month 11  # November only
+“””
 
 import csv
 import json
@@ -78,29 +78,29 @@ else:
 # Date windows for 2025
 
 DATE_WINDOWS = {
-â€œq1â€: [(â€œ01/01/2025â€, â€œ03/31/2025â€)],
-â€œq2â€: [(â€œ04/01/2025â€, â€œ06/30/2025â€)],
-â€œq3â€: [(â€œ07/01/2025â€, â€œ09/30/2025â€)],
-â€œq4â€: [(â€œ10/01/2025â€, â€œ12/31/2025â€)],
-â€œfull_yearâ€: [
-(â€œ01/01/2025â€, â€œ03/31/2025â€),
-(â€œ04/01/2025â€, â€œ06/30/2025â€),
-(â€œ07/01/2025â€, â€œ09/30/2025â€),
-(â€œ10/01/2025â€, â€œ12/31/2025â€)
+“q1”: [(“01/01/2025”, “03/31/2025”)],
+“q2”: [(“04/01/2025”, “06/30/2025”)],
+“q3”: [(“07/01/2025”, “09/30/2025”)],
+“q4”: [(“10/01/2025”, “12/31/2025”)],
+“full_year”: [
+(“01/01/2025”, “03/31/2025”),
+(“04/01/2025”, “06/30/2025”),
+(“07/01/2025”, “09/30/2025”),
+(“10/01/2025”, “12/31/2025”)
 ],
-â€œmonthlyâ€: [
-(â€œ01/01/2025â€, â€œ01/31/2025â€),
-(â€œ02/01/2025â€, â€œ02/28/2025â€),
-(â€œ03/01/2025â€, â€œ03/31/2025â€),
-(â€œ04/01/2025â€, â€œ04/30/2025â€),
-(â€œ05/01/2025â€, â€œ05/31/2025â€),
-(â€œ06/01/2025â€, â€œ06/30/2025â€),
-(â€œ07/01/2025â€, â€œ07/31/2025â€),
-(â€œ08/01/2025â€, â€œ08/31/2025â€),
-(â€œ09/01/2025â€, â€œ09/30/2025â€),
-(â€œ10/01/2025â€, â€œ10/31/2025â€),
-(â€œ11/01/2025â€, â€œ11/30/2025â€),
-(â€œ12/01/2025â€, â€œ12/31/2025â€)
+“monthly”: [
+(“01/01/2025”, “01/31/2025”),
+(“02/01/2025”, “02/28/2025”),
+(“03/01/2025”, “03/31/2025”),
+(“04/01/2025”, “04/30/2025”),
+(“05/01/2025”, “05/31/2025”),
+(“06/01/2025”, “06/30/2025”),
+(“07/01/2025”, “07/31/2025”),
+(“08/01/2025”, “08/31/2025”),
+(“09/01/2025”, “09/30/2025”),
+(“10/01/2025”, “10/31/2025”),
+(“11/01/2025”, “11/30/2025”),
+(“12/01/2025”, “12/31/2025”)
 ]
 }
 
@@ -111,8 +111,8 @@ DATE_WINDOWS = {
 # ============================================================
 
 def setup_logging():
-â€œâ€â€œConfigure logging to both console and file.â€â€â€
-log_folder = Path(CONFIG[â€œlog_folderâ€])
+“”“Configure logging to both console and file.”””
+log_folder = Path(CONFIG[“log_folder”])
 log_folder.mkdir(parents=True, exist_ok=True)
 
 ```
@@ -138,7 +138,7 @@ console_handler.setFormatter(console_format)
 logger.addHandler(file_handler)
 logger.addHandler(console_handler)
 
-logger.info(f"ðŸ“ Log file: {log_path}")
+logger.info(f"📝 Log file: {log_path}")
 return logger
 ```
 
@@ -152,8 +152,8 @@ logger = None
 
 # ============================================================
 
-def get_output_filename(prefix=â€œvcs_extra_duty_jobsâ€, suffix=â€â€):
-â€œâ€â€œGenerate timestamped output filename.
+def get_output_filename(prefix=“vcs_extra_duty_jobs”, suffix=””):
+“”“Generate timestamped output filename.
 
 ```
 Args:
@@ -168,7 +168,7 @@ return f"{prefix}{suffix}_{timestamp}.csv"
 ```
 
 def get_suffix_from_dates(start_date, end_date):
-â€œâ€â€œGenerate suffix based on date range.
+“”“Generate suffix based on date range.
 
 ```
 Args:
@@ -205,7 +205,7 @@ except Exception:
 ```
 
 def retry_on_stale(func, max_retries=None, delay=None):
-â€œâ€â€œDecorator/wrapper to retry on stale element exceptions.
+“”“Decorator/wrapper to retry on stale element exceptions.
 
 ```
 Args:
@@ -240,7 +240,7 @@ raise last_exception
 # ============================================================
 
 def connect_to_chrome():
-â€œâ€â€œAttach to already-running Chrome instance with remote debugging.
+“”“Attach to already-running Chrome instance with remote debugging.
 
 ```
 Returns:
@@ -249,7 +249,7 @@ Returns:
 Raises:
     WebDriverException if Chrome is not running or not accessible
 """
-logger.info("ðŸ”— Connecting to Chrome...")
+logger.info("🔗 Connecting to Chrome...")
 
 chrome_options = Options()
 chrome_options.add_experimental_option("debuggerAddress", CONFIG["chrome_debugger_address"])
@@ -263,20 +263,20 @@ try:
     
     # Verify we're on the right page
     if "extra-duty" not in current_url.lower() and "vcssoftware" not in current_url.lower():
-        logger.warning("âš ï¸  Current page may not be the Extra Duty portal")
+        logger.warning("⚠️  Current page may not be the Extra Duty portal")
         logger.warning(f"   Expected URL containing: {CONFIG['portal_url']}")
     
     return driver
 
 except WebDriverException as e:
-    logger.error("âŒ Failed to connect to Chrome")
+    logger.error("❌ Failed to connect to Chrome")
     logger.error("   Make sure Chrome is running with:")
     logger.error('   chrome.exe --remote-debugging-port=9222 --user-data-dir="C:\\ChromeDebug"')
     raise
 ```
 
 def verify_page_state(driver):
-â€œâ€â€œCheck if page is loaded and ready for interaction.
+“”“Check if page is loaded and ready for interaction.
 
 ```
 Returns:
@@ -298,7 +298,7 @@ except TimeoutException:
 # ============================================================
 
 def find_date_input(driver, input_type):
-â€œâ€â€œLocate the start or end date input field.
+“”“Locate the start or end date input field.
 
 ```
 Args:
@@ -343,7 +343,7 @@ raise NoSuchElementException(f"Could not find {input_type} date input")
 ```
 
 def set_date_range(driver, start_date, end_date):
-â€œâ€â€œSet the date range filter on the portal.
+“”“Set the date range filter on the portal.
 
 ```
 Args:
@@ -354,7 +354,7 @@ Args:
 Returns:
     True if successful
 """
-logger.info(f"ðŸ“… Setting date range: {start_date} to {end_date}")
+logger.info(f"📅 Setting date range: {start_date} to {end_date}")
 
 def set_single_date(input_type, date_value):
     """Set a single date input with retry."""
@@ -395,7 +395,7 @@ set_single_date('end', end_date)
 # Wait for grid to start refreshing
 time.sleep(CONFIG["grid_refresh_wait"])
 
-logger.info("   âœ“ Date range set")
+logger.info("   ✓ Date range set")
 return True
 ```
 
@@ -406,7 +406,7 @@ return True
 # ============================================================
 
 def find_toggle_element(driver, toggle_name):
-â€œâ€â€œLocate a toggle/checkbox element by its label text.
+“”“Locate a toggle/checkbox element by its label text.
 
 ```
 Args:
@@ -458,7 +458,7 @@ raise NoSuchElementException(f"Could not find toggle: {toggle_name}")
 ```
 
 def ensure_toggle_state(driver, toggle_name, desired_state=True):
-â€œâ€â€œEnsure a toggle is in the desired state (on/off).
+“”“Ensure a toggle is in the desired state (on/off).
 
 ```
 Args:
@@ -504,7 +504,7 @@ return retry_on_stale(action)
 ```
 
 def set_all_toggles(driver):
-â€œâ€â€œSet both required toggles to ON state.
+“”“Set both required toggles to ON state.
 
 ```
 Args:
@@ -513,7 +513,7 @@ Args:
 Returns:
     True if all toggles are set correctly
 """
-logger.info("ðŸ”˜ Setting toggles...")
+logger.info("🔘 Setting toggles...")
 
 toggles = [
     "Show Closed Jobs",
@@ -525,19 +525,19 @@ for toggle_name in toggles:
     try:
         result = ensure_toggle_state(driver, toggle_name, desired_state=True)
         if result:
-            logger.info(f"   âœ“ {toggle_name}: ON")
+            logger.info(f"   ✓ {toggle_name}: ON")
         else:
-            logger.warning(f"   âš  {toggle_name}: Could not verify state")
+            logger.warning(f"   ⚠ {toggle_name}: Could not verify state")
             all_success = False
     except NoSuchElementException:
-        logger.warning(f"   âš  Toggle not found: {toggle_name}")
+        logger.warning(f"   ⚠ Toggle not found: {toggle_name}")
         all_success = False
 
 return all_success
 ```
 
 def verify_toggles_still_on(driver):
-â€œâ€â€œCheck if toggles are still in the ON state.
+“”“Check if toggles are still in the ON state.
 
 ```
 Returns:
@@ -567,7 +567,7 @@ return True
 # ============================================================
 
 def find_job_grid(driver):
-â€œâ€â€œLocate the main job grid/table element.
+“”“Locate the main job grid/table element.
 
 ```
 Returns:
@@ -603,7 +603,7 @@ raise NoSuchElementException("Could not find job grid")
 ```
 
 def wait_for_grid_refresh(driver, timeout=None):
-â€œâ€â€œWait for the grid to finish loading/refreshing.
+“”“Wait for the grid to finish loading/refreshing.
 
 ```
 Args:
@@ -641,13 +641,13 @@ return True
 ```
 
 def extract_grid_rows(driver):
-â€œâ€â€œExtract all data rows from the job grid.
+“”“Extract all data rows from the job grid.
 
 ```
 Returns:
     List of dictionaries, one per job
 """
-logger.info("ðŸ“‹ Scraping grid rows...")
+logger.info("📋 Scraping grid rows...")
 
 def action():
     grid = find_job_grid(driver)
@@ -699,7 +699,7 @@ return retry_on_stale(action)
 # ============================================================
 
 def save_to_csv(jobs, output_path):
-â€œâ€â€œSave job data to CSV file.
+“”“Save job data to CSV file.
 
 ```
 Args:
@@ -719,7 +719,7 @@ with open(output_path, 'w', newline='', encoding='utf-8') as f:
     writer.writeheader()
     writer.writerows(jobs)
 
-logger.info(f"   ðŸ’¾ Saved: {output_path.name} ({len(jobs)} rows)")
+logger.info(f"   💾 Saved: {output_path.name} ({len(jobs)} rows)")
 return output_path
 ```
 
@@ -730,7 +730,7 @@ return output_path
 # ============================================================
 
 def scrape_date_window(driver, start_date, end_date):
-â€œâ€â€œScrape jobs for a single date window.
+“”“Scrape jobs for a single date window.
 
 ```
 Args:
@@ -742,13 +742,13 @@ Returns:
     List of job dictionaries, or empty list on failure
 """
 logger.info(f"\n{'='*60}")
-logger.info(f"ðŸ“† Scraping window: {start_date} to {end_date}")
+logger.info(f"📆 Scraping window: {start_date} to {end_date}")
 logger.info(f"{'='*60}")
 
 try:
     # Step 1: Verify page is ready
     if not verify_page_state(driver):
-        logger.warning("âš ï¸  Page may not be fully loaded")
+        logger.warning("⚠️  Page may not be fully loaded")
     
     # Step 2: Set date range
     set_date_range(driver, start_date, end_date)
@@ -768,22 +768,22 @@ try:
     # Step 6: Extract grid data
     jobs = extract_grid_rows(driver)
     
-    logger.info(f"   âœ“ Extracted {len(jobs)} jobs")
+    logger.info(f"   ✓ Extracted {len(jobs)} jobs")
     return jobs
 
 except TimeoutException as e:
-    logger.error(f"âŒ Timeout during scrape: {e}")
+    logger.error(f"❌ Timeout during scrape: {e}")
     return []
 except NoSuchElementException as e:
-    logger.error(f"âŒ Element not found: {e}")
+    logger.error(f"❌ Element not found: {e}")
     return []
 except Exception as e:
-    logger.error(f"âŒ Unexpected error: {type(e).__name__}: {e}")
+    logger.error(f"❌ Unexpected error: {type(e).__name__}: {e}")
     return []
 ```
 
-def run_scraper(mode=â€œq4â€, specific_month=None):
-â€œâ€â€œMain entry point for the scraper.
+def run_scraper(mode=“q4”, specific_month=None):
+“”“Main entry point for the scraper.
 
 ```
 Args:
@@ -843,7 +843,7 @@ for start_date, end_date in windows:
             logger.warning(f"   No jobs found for {start_date} to {end_date}")
     
     except Exception as e:
-        logger.error(f"âŒ Failed window {start_date}-{end_date}: {e}")
+        logger.error(f"❌ Failed window {start_date}-{end_date}: {e}")
         continue
 
 # Summary
@@ -857,9 +857,9 @@ logger.info(f"Total jobs: {total_jobs}")
 if saved_files:
     logger.info("\nSaved files:")
     for f in saved_files:
-        logger.info(f"   â€¢ {f.name}")
+        logger.info(f"   • {f.name}")
 
-logger.info("\nðŸ“Œ Next step: Run traffic_jobs_postprocessor.py")
+logger.info("\n📌 Next step: Run traffic_jobs_postprocessor.py")
 
 return saved_files
 ```
@@ -871,38 +871,38 @@ return saved_files
 # ============================================================
 
 # def print_usage():
-â€œâ€â€œPrint usage instructions.â€â€â€
-print(â€â€â€
+“”“Print usage instructions.”””
+print(”””
 VCS Extra Duty Scraper - Usage
 
 BEFORE RUNNING:
 
 1. Start Chrome with remote debugging:
-   chrome.exe â€“remote-debugging-port=9222 â€“user-data-dir=â€œC:\ChromeDebugâ€
+   chrome.exe –remote-debugging-port=9222 –user-data-dir=“C:\ChromeDebug”
 1. Log into VCS portal manually
 1. Navigate to the Extra Duty Signup page
 
 COMMANDS:
 python vcs_extra_duty_scrape.py                    # Default: Q4 2025
-python vcs_extra_duty_scrape.py â€“mode q1          # Q1 2025 only
-python vcs_extra_duty_scrape.py â€“mode q2          # Q2 2025 only
-python vcs_extra_duty_scrape.py â€“mode q3          # Q3 2025 only
-python vcs_extra_duty_scrape.py â€“mode q4          # Q4 2025 only
-python vcs_extra_duty_scrape.py â€“mode full_year   # All 4 quarters
-python vcs_extra_duty_scrape.py â€“mode monthly     # All 12 months
-python vcs_extra_duty_scrape.py â€“mode month â€“month 11  # November only
-python vcs_extra_duty_scrape.py â€“help             # Show this message
+python vcs_extra_duty_scrape.py –mode q1          # Q1 2025 only
+python vcs_extra_duty_scrape.py –mode q2          # Q2 2025 only
+python vcs_extra_duty_scrape.py –mode q3          # Q3 2025 only
+python vcs_extra_duty_scrape.py –mode q4          # Q4 2025 only
+python vcs_extra_duty_scrape.py –mode full_year   # All 4 quarters
+python vcs_extra_duty_scrape.py –mode monthly     # All 12 months
+python vcs_extra_duty_scrape.py –mode month –month 11  # November only
+python vcs_extra_duty_scrape.py –help             # Show this message
 
 OUTPUT:
 CSVs saved to: {output_folder}
 Logs saved to: {log_folder}
-â€œâ€â€.format(
-output_folder=CONFIG[â€œoutput_folderâ€],
-log_folder=CONFIG[â€œlog_folderâ€]
+“””.format(
+output_folder=CONFIG[“output_folder”],
+log_folder=CONFIG[“log_folder”]
 ))
 
 def main():
-â€œâ€â€œParse command line arguments and run scraper.â€â€â€
+“”“Parse command line arguments and run scraper.”””
 args = sys.argv[1:]
 
 ```
@@ -948,6 +948,7 @@ if mode == "month" and (not specific_month or specific_month < 1 or specific_mon
 run_scraper(mode=mode, specific_month=specific_month)
 ```
 
-if **name** == â€œ**main**â€:
+if **name** == “**main**”:
 main()
-`
+
+```

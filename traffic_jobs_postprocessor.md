@@ -3,7 +3,7 @@
 ## Full Script
 
 ```python
-# ðŸ•’ 2025-12-03-10-20-00
+# 🕒 2025-12-03-10-20-00
 
 # Extra_Duty/traffic_jobs_postprocessor.py
 
@@ -63,7 +63,7 @@ def ensure_folders_exist(config):
     ]
     for folder in folders:
         Path(folder).mkdir(parents=True, exist_ok=True)
-        print(f"  âœ“ Folder ready: {Path(folder).name}")
+        print(f"  ✓ Folder ready: {Path(folder).name}")
 
 # ============================================================
 
@@ -147,7 +147,7 @@ def read_scraped_csvs(folder, pattern): """Read all scraped CSV files and combin
     
     
     if not files:
-        print(f"âš ï¸ No CSV files found matching {pattern} in {folder}")
+        print(f"⚠️ No CSV files found matching {pattern} in {folder}")
         return pd.DataFrame()
     
     dfs = []
@@ -157,9 +157,9 @@ def read_scraped_csvs(folder, pattern): """Read all scraped CSV files and combin
             df['_source_file'] = f.name
             df['_source_type'] = 'scraped_csv'
             dfs.append(df)
-            print(f"  âœ“ Loaded {f.name}: {len(df)} rows")
+            print(f"  ✓ Loaded {f.name}: {len(df)} rows")
         except Exception as e:
-            print(f"  âœ— Error reading {f.name}: {e}")
+            print(f"  ✗ Error reading {f.name}: {e}")
     
     if dfs:
         combined = pd.concat(dfs, ignore_index=True)
@@ -258,13 +258,13 @@ def read_dataset_files(folder, parser_func, file_pattern="*.txt"): """Read all t
     
     
     if not folder_path.exists():
-        print(f"âš ï¸ Folder does not exist: {folder}")
+        print(f"⚠️ Folder does not exist: {folder}")
         return pd.DataFrame()
     
     files = list(folder_path.glob(file_pattern))
     
     if not files:
-        print(f"âš ï¸ No files found in {folder}")
+        print(f"⚠️ No files found in {folder}")
         return pd.DataFrame()
     
     dfs = []
@@ -273,9 +273,9 @@ def read_dataset_files(folder, parser_func, file_pattern="*.txt"): """Read all t
             df = parser_func(f)
             if not df.empty:
                 dfs.append(df)
-                print(f"  âœ“ Loaded {f.name}: {len(df)} rows")
+                print(f"  ✓ Loaded {f.name}: {len(df)} rows")
         except Exception as e:
-            print(f"  âœ— Error parsing {f.name}: {e}")
+            print(f"  ✗ Error parsing {f.name}: {e}")
     
     if dfs:
         return pd.concat(dfs, ignore_index=True)
@@ -360,7 +360,7 @@ def build_master_dataset(scraped_df, dataset1_df, dataset2_df, config): """Build
         my_signups = my_signups.drop_duplicates(subset=dedup_keys, keep='last')
         after_count = len(my_signups)
         if before_count > after_count:
-            print(f"  â„¹ï¸ Deduplicated: {before_count} â†’ {after_count} rows")
+            print(f"  ℹ️ Deduplicated: {before_count} → {after_count} rows")
     
     # Create status flags
     if not my_signups.empty:
@@ -611,36 +611,36 @@ def main():
     print()
     
     # Setup folders
-    print("ðŸ“ Setting up folders...")
+    print("📁 Setting up folders...")
     ensure_folders_exist(CONFIG)
     print()
     
     # Step 1: Read scraped CSVs
-    print("ðŸ“‚ Reading scraped CSVs...")
+    print("📂 Reading scraped CSVs...")
     scraped_df = read_scraped_csvs(CONFIG["scraped_csv_folder"], CONFIG["scraped_csv_pattern"])
     print(f"   Total scraped rows: {len(scraped_df)}")
     print()
     
     # Step 2: Read Dataset 1 text files
-    print("ðŸ“‚ Reading Dataset 1 files (my signups)...")
+    print("📂 Reading Dataset 1 files (my signups)...")
     dataset1_df = read_dataset_files(CONFIG["dataset1_folder"], parse_dataset1_file)
     print(f"   Total Dataset 1 rows: {len(dataset1_df)}")
     print()
     
     # Step 3: Read Dataset 2 text files
-    print("ðŸ“‚ Reading Dataset 2 files (assigned workers)...")
+    print("📂 Reading Dataset 2 files (assigned workers)...")
     dataset2_df = read_dataset_files(CONFIG["dataset2_folder"], parse_dataset2_file)
     print(f"   Total Dataset 2 rows: {len(dataset2_df)}")
     print()
     
     # Step 4: Build master dataset
-    print("ðŸ”§ Building master dataset...")
+    print("🔧 Building master dataset...")
     my_signups, assigned_others = build_master_dataset(scraped_df, dataset1_df, dataset2_df, CONFIG)
     print(f"   Master dataset rows: {len(my_signups)}")
     print()
     
     # Step 5: Generate summaries
-    print("ðŸ“Š Generating summary statistics...")
+    print("📊 Generating summary statistics...")
     monthly_summary, overall_stats = create_summary_stats(my_signups)
     
     if overall_stats:
@@ -651,14 +651,14 @@ def main():
     print()
     
     # Step 6: Create Excel output
-    print("ðŸ“ Creating Excel workbook...")
+    print("📝 Creating Excel workbook...")
     output_path = create_output_workbook(my_signups, assigned_others, monthly_summary, overall_stats, CONFIG)
-    print(f"   âœ… Saved to: {output_path}")
+    print(f"   ✅ Saved to: {output_path}")
     print()
     
     # Print summary
     print("\n" + "="*60)
-    print("ðŸ“Š PROCESSING SUMMARY")
+    print("📊 PROCESSING SUMMARY")
     print("="*60)
     if not my_signups.empty:
         print(f"Total signups: {len(my_signups)}")
@@ -670,7 +670,7 @@ def main():
         total_hours = my_signups[my_signups['IsInvoiced']]['Hours'].sum()
         print(f"Total hours (awarded): {total_hours:.1f}")
         print(f"Date range: {my_signups['Date'].min()} to {my_signups['Date'].max()}")
-    print(f"\nâœ“ Master Excel: {output_path.name}")
+    print(f"\n✓ Master Excel: {output_path.name}")
     print(f"  Location: {CONFIG['output_folder']}")
     
     print("\n" + "=" * 60)
@@ -680,7 +680,7 @@ def main():
 if __name__ == "__main__":
     main()
 
-# ðŸ•’ 2025-12-03-10-15-00
+# 🕒 2025-12-03-10-15-00
 
 # Extra_Duty/scraper_filename_update.py
 
@@ -760,7 +760,7 @@ def get_quarter_suffix(start_date_str, end_date_str): """Determine quarter suffi
 
 # OUTPUT_CSV = get_output_filename(suffix=suffix)
 
-# ðŸ•’ 2025-12-03-10-45-00
+# 🕒 2025-12-03-10-45-00
 
 # Extra_Duty/README_PostProcessor.md
 
@@ -775,44 +775,44 @@ Downstream processing system for VCS Extra Duty job data. Consumes scraped CSVs 
 ## System Architecture
     
     
-    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-    â”‚                        DATA SOURCES                              â”‚
-    â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-    â”‚  1. Selenium Scraper (vcs_extra_duty_scrape.py)                 â”‚
-    â”‚     â””â”€â”€ Output: vcs_extra_duty_jobs_YYYYQ#_YYYYMMDD_HHMM.csv    â”‚
-    â”‚                                                                  â”‚
-    â”‚  2. Dataset 1 Text Files (my signups)                           â”‚
-    â”‚     â””â”€â”€ Template: TEMPLATE_dataset1_my_signups.txt              â”‚
-    â”‚                                                                  â”‚
-    â”‚  3. Dataset 2 Text Files (assigned workers by date)             â”‚
-    â”‚     â””â”€â”€ Template: TEMPLATE_dataset2_assigned_workers.txt        â”‚
-    â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                                  â”‚
-                                  â–¼
-    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-    â”‚                    POST-PROCESSOR                                â”‚
-    â”‚                 traffic_jobs_postprocessor.py                    â”‚
-    â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-    â”‚  â€¢ Reads all CSV + TXT inputs                                   â”‚
-    â”‚  â€¢ Normalizes dates/times                                       â”‚
-    â”‚  â€¢ Deduplicates on Job # + Date + Customer                      â”‚
-    â”‚  â€¢ Cross-references Dataset 2 to find who got jobs I didn't     â”‚
-    â”‚  â€¢ Calculates hours and monthly stats                           â”‚
-    â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                                  â”‚
-                                  â–¼
-    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-    â”‚                    OUTPUT                                        â”‚
-    â”‚              TrafficJobs_2025_Master.xlsx                        â”‚
-    â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-    â”‚  Sheet 1: All Jobs           - Complete dataset                  â”‚
-    â”‚  Sheet 2: Awarded            - Status = Invoiced (green)         â”‚
-    â”‚  Sheet 3: Not Awarded        - Status = Requested (orange if     â”‚
-    â”‚                                someone else got it)              â”‚
-    â”‚  Sheet 4: Other Assignments  - Dataset 2 data by date            â”‚
-    â”‚  Sheet 5: Monthly Summary    - Counts/rates by month             â”‚
-    â”‚  Sheet 6: Instructions       - Documentation                     â”‚
-    â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                        DATA SOURCES                              │
+    ├─────────────────────────────────────────────────────────────────┤
+    │  1. Selenium Scraper (vcs_extra_duty_scrape.py)                 │
+    │     └── Output: vcs_extra_duty_jobs_YYYYQ#_YYYYMMDD_HHMM.csv    │
+    │                                                                  │
+    │  2. Dataset 1 Text Files (my signups)                           │
+    │     └── Template: TEMPLATE_dataset1_my_signups.txt              │
+    │                                                                  │
+    │  3. Dataset 2 Text Files (assigned workers by date)             │
+    │     └── Template: TEMPLATE_dataset2_assigned_workers.txt        │
+    └─────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    POST-PROCESSOR                                │
+    │                 traffic_jobs_postprocessor.py                    │
+    ├─────────────────────────────────────────────────────────────────┤
+    │  • Reads all CSV + TXT inputs                                   │
+    │  • Normalizes dates/times                                       │
+    │  • Deduplicates on Job # + Date + Customer                      │
+    │  • Cross-references Dataset 2 to find who got jobs I didn't     │
+    │  • Calculates hours and monthly stats                           │
+    └─────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    OUTPUT                                        │
+    │              TrafficJobs_2025_Master.xlsx                        │
+    ├─────────────────────────────────────────────────────────────────┤
+    │  Sheet 1: All Jobs           - Complete dataset                  │
+    │  Sheet 2: Awarded            - Status = Invoiced (green)         │
+    │  Sheet 3: Not Awarded        - Status = Requested (orange if     │
+    │                                someone else got it)              │
+    │  Sheet 4: Other Assignments  - Dataset 2 data by date            │
+    │  Sheet 5: Monthly Summary    - Counts/rates by month             │
+    │  Sheet 6: Instructions       - Documentation                     │
+    └─────────────────────────────────────────────────────────────────┘
     
     
 
@@ -820,19 +820,19 @@ Downstream processing system for VCS Extra Duty job data. Consumes scraped CSVs 
     
     
     C:\\\\Users\\\\carucci_r\\\\OneDrive - City of Hackensack\\\\RAC\\\\Extra_Duty\\\\
-    â”œâ”€â”€ scripts\\\\
-    â”‚   â”œâ”€â”€ vcs_extra_duty_scrape.py        # Selenium scraper
-    â”‚   â”œâ”€â”€ traffic_jobs_postprocessor.py   # Post-processor
-    â”‚   â””â”€â”€ vcs_extra_duty_jobs_*.csv       # Scraped outputs
-    â”‚
-    â”œâ”€â”€ data\\\\
-    â”‚   â”œâ”€â”€ dataset1\\\\                        # My signup text files
-    â”‚   â”‚   â””â”€â”€ dataset1_2025-11-21.txt
-    â”‚   â””â”€â”€ dataset2\\\\                        # Assigned workers text files
-    â”‚       â””â”€â”€ dataset2_2025-11-03.txt
-    â”‚
-    â””â”€â”€ output\\\\
-        â””â”€â”€ TrafficJobs_2025_Master.xlsx     # Final output
+    ├── scripts\\\\
+    │   ├── vcs_extra_duty_scrape.py        # Selenium scraper
+    │   ├── traffic_jobs_postprocessor.py   # Post-processor
+    │   └── vcs_extra_duty_jobs_*.csv       # Scraped outputs
+    │
+    ├── data\\\\
+    │   ├── dataset1\\\\                        # My signup text files
+    │   │   └── dataset1_2025-11-21.txt
+    │   └── dataset2\\\\                        # Assigned workers text files
+    │       └── dataset2_2025-11-03.txt
+    │
+    └── output\\\\
+        └── TrafficJobs_2025_Master.xlsx     # Final output
     
     
 
@@ -972,7 +972,7 @@ Auto-calculated stats:
 3. **Power BI Integration** - Direct refresh from master Excel
 4. **Multi-Employee Support** - Track multiple workers
 
-# ðŸ•’ 2025-11-29-14-45-00
+# 🕒 2025-11-29-14-45-00
 
 # traffic_jobs/TEMPLATE_dataset1_my_signups.txt
 
@@ -1018,7 +1018,7 @@ REPORT_DATE: 2025-11-03 MY_NAME: Carucci, Robert
 
 --DATA_START-- 6059 Traffic Control 11/03/25 07:30-15:30 Veolia Water - Construction 147 Holt St Requested 6083 Traffic Control 11/05/25 07:30-15:30 Veolia Water - Construction American Legion Dr & Prospect Ave Requested 6113 Traffic Control - Milling 11/13/25 07:00-16:00 PSE&G Gas (Oradell) MC 314 Berry st/Railroad ave Invoiced --DATA_END--
 
-# ðŸ•’ 2025-11-29-14-45-00
+# 🕒 2025-11-29-14-45-00
 
 # traffic_jobs/TEMPLATE_dataset2_assigned_workers.txt
 
@@ -1065,4 +1065,4 @@ SIGNUP_DATE: 2025-11-03 MY_NAME: Carucci, Robert
 # ============================================================
 
 --DATA_START-- Briggs, Sean Legacy Development Group Traffic Control 359 Main Street 0800 - 1800 110 Scarpa, Frank Veolia Water - Construction Traffic Control 147 Holt St 0730 - 1530 139 --DATA_END--
-`
+```
