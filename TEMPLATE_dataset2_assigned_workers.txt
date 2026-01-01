@@ -1,0 +1,42 @@
+# 🕒 2025-11-29-14-45-00
+# traffic_jobs/TEMPLATE_dataset2_assigned_workers.txt
+# Author: R. A. Carucci
+# Purpose: Template for pasting Dataset 2 - Workers assigned to jobs on a specific date (to identify jobs I signed up for but was NOT awarded)
+
+# ============================================================
+# INSTRUCTIONS:
+# 1. Go to the portal for the DATE you signed up but were NOT awarded
+# 2. Copy the list of workers who WERE assigned that day
+# 3. Paste below the DATA_START line
+# 4. Save this file as: dataset2_YYYY-MM-DD.txt (e.g., dataset2_2025-11-03.txt)
+# 5. Each record = 6 lines (no blank lines between records)
+# ============================================================
+
+# DATE THIS DATA REPRESENTS (the day you were NOT selected):
+SIGNUP_DATE: 2025-11-03
+MY_NAME: Carucci, Robert
+
+# ============================================================
+# EXPECTED FORMAT (6 lines per assigned worker):
+# Line 1: Employee (Last, First)
+# Line 2: Customer
+# Line 3: Description
+# Line 4: Location
+# Line 5: Times (HHMM - HHMM)
+# Line 6: Vehicle #
+# ============================================================
+
+---DATA_START---
+Briggs, Sean
+Legacy Development Group
+Traffic Control
+359 Main Street
+0800 - 1800
+110
+Scarpa, Frank
+Veolia Water - Construction
+Traffic Control
+147 Holt St
+0730 - 1530
+139
+---DATA_END---

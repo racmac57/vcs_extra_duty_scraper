@@ -1,0 +1,6 @@
+# VCS Extra Duty Scraper Dependencies
+# Python 3.8+
+
+selenium==4.16.0
+pandas==2.1.4
+openpyxl==3.1.2

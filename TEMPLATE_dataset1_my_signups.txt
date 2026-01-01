@@ -1,0 +1,50 @@
+# 🕒 2025-11-29-14-45-00
+# traffic_jobs/TEMPLATE_dataset1_my_signups.txt
+# Author: R. A. Carucci
+# Purpose: Template for pasting Dataset 1 - My job signups from the web portal
+
+# ============================================================
+# INSTRUCTIONS:
+# 1. Copy your signup data from the portal (Job #, Description, Date, Times, Customer, Address, Status)
+# 2. Paste below the DATA_START line
+# 3. Save this file as: dataset1_YYYY-MM-DD.txt (e.g., dataset1_2025-11-03.txt)
+# 4. Each record = 7 lines (no blank lines between records)
+# ============================================================
+
+REPORT_DATE: 2025-11-03
+MY_NAME: Carucci, Robert
+
+# ============================================================
+# EXPECTED FORMAT (7 lines per job):
+# Line 1: Job #
+# Line 2: Description
+# Line 3: Date (MM/DD/YY)
+# Line 4: Times (HH:MM-HH:MM)
+# Line 5: Customer
+# Line 6: Address
+# Line 7: Status (Invoiced or Requested)
+# ============================================================
+
+---DATA_START---
+6059
+Traffic Control
+11/03/25
+07:30-15:30
+Veolia Water - Construction
+147 Holt St
+Requested
+6083
+Traffic Control
+11/05/25
+07:30-15:30
+Veolia Water - Construction
+American Legion Dr & Prospect Ave
+Requested
+6113
+Traffic Control - Milling
+11/13/25
+07:00-16:00
+PSE&G Gas (Oradell) MC 314
+Berry st/Railroad ave
+Invoiced
+---DATA_END---

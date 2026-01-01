@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Data files (don't commit raw data)
+*.csv
+*.xlsx
+*.xls
+
+# Logs
+*.log
+logs/
+
+# Chrome debugging
+ChromeDebug/
+
+# Output folders
+data/raw_scraper_csv/*.csv
+data/dataset1/*.txt
+data/dataset2/*.txt
+output/*.xlsx
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Keep folder structure but ignore contents
+data/raw_scraper_csv/.gitkeep
+data/dataset1/.gitkeep
+data/dataset2/.gitkeep
+output/.gitkeep
+logs/.gitkeep
+
+# Config - UNCOMMENT if it contains credentials
+# config.json

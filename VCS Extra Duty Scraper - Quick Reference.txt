@@ -1,0 +1,185 @@
+# VCS Extra Duty Scraper - Quick Reference
+🕒 2025-12-03-11-20-00
+Extra_Duty/SCRAPER_CHECKLIST.md
+Author: R. A. Carucci
+Purpose: Pre-run checklist and quick reference for VCS Extra Duty Scraper
+
+
+
+## Pre-Run Checklist
+
+### Before Each Scrape Session
+
+- [ ] **Close all existing Chrome windows** (important for clean debug session)
+- [ ] **Start Chrome with remote debugging:**
+  
+  ```
+  chrome.exe --remote-debugging-port=9222 --user-data-dir="C:\ChromeDebug"
+  ```
+  
+  Or double-click `run_scraper.bat`
+- [ ] **Log into VCS portal manually** in the debug Chrome window
+- [ ] **Navigate to Extra Duty Signup page:**
+  
+  ```
+  https://app10.vcssoftware.com/extra-duty-signup
+  ```
+- [ ] **Verify you can see the job grid** (the page is loaded and ready)
+
+-----
+
+## Running the Scraper
+
+### Option A: Use the Batch File (Recommended)
+
+1. Double-click `run_scraper.bat`
+2. Log in when Chrome opens
+3. Press any key to start scraping
+4. Edit `MODE=q4` in the batch file to change date range
+
+### Option B: Command Line
+
+```batch
+cd "C:\Users\carucci_r\OneDrive - City of Hackensack\RAC\Extra_Duty\scripts"
+
+# Q4 2025 only (default)
+python vcs_extra_duty_scrape.py
+
+# Specific quarter
+python vcs_extra_duty_scrape.py --mode q1
+python vcs_extra_duty_scrape.py --mode q2
+python vcs_extra_duty_scrape.py --mode q3
+python vcs_extra_duty_scrape.py --mode q4
+
+# Full year (all 4 quarters, one CSV each)
+python vcs_extra_duty_scrape.py --mode full_year
+
+# All 12 months (one CSV per month)
+python vcs_extra_duty_scrape.py --mode monthly
+
+# Single month
+python vcs_extra_duty_scrape.py --mode month --month 11
+```
+
+-----
+
+## After Scraping
+
+### Run the Post-Processor
+
+```batch
+cd "C:\Users\carucci_r\OneDrive - City of Hackensack\RAC\Extra_Duty\scripts"
+python traffic_jobs_postprocessor.py
+```
+
+### Review Output
+
+Open: `...\Extra_Duty\output\TrafficJobs_2025_Master.xlsx`
+
+Sheets:
+
+- **All Jobs** - Complete dataset
+- **Awarded** - Jobs with Status = Invoiced
+- **Not Awarded** - Jobs with Status = Requested
+- **Monthly Summary** - Stats by month
+
+-----
+
+## Troubleshooting
+
+### “Failed to connect to Chrome”
+
+**Cause:** Chrome not running with debug port
+
+**Fix:**
+
+1. Close ALL Chrome windows
+2. Run: `chrome.exe --remote-debugging-port=9222 --user-data-dir="C:\ChromeDebug"`
+
+### “Could not find job grid”
+
+**Cause:** Page not loaded or different page
+
+**Fix:**
+
+1. Manually navigate to Extra Duty Signup page
+2. Wait for grid to fully load
+3. Re-run scraper
+
+### “Toggle not found” warnings
+
+**Cause:** Portal UI may have changed
+
+**Impact:** Minor - scraper continues without that filter
+
+**Fix:** Manually set toggles before running, or update locators in script
+
+### “Stale element” errors
+
+**Cause:** Page refreshed during scrape
+
+**Impact:** Script retries automatically (up to 3 times)
+
+**If persistent:**
+
+1. Increase `grid_refresh_wait` in CONFIG (try 5 seconds)
+2. Avoid clicking anything during scrape
+
+### CSVs are empty or have few rows
+
+**Possible causes:**
+
+1. Date range has no jobs
+2. Toggles reset (check log file for warnings)
+3. Grid structure changed
+
+**Fix:** Check the log file in `...\Extra_Duty\logs\` for details
+
+-----
+
+## File Locations
+
+|File          |Location                                              |
+|--------------|------------------------------------------------------|
+|Scraper script|`...\Extra_Duty\scripts\vcs_extra_duty_scrape.py`     |
+|Post-processor|`...\Extra_Duty\scripts\traffic_jobs_postprocessor.py`|
+|Raw CSVs      |`...\Extra_Duty\data\raw_scraper_csv\`                |
+|Master Excel  |`...\Extra_Duty\output\TrafficJobs_2025_Master.xlsx`  |
+|Log files     |`...\Extra_Duty\logs\`                                |
+
+-----
+
+## CSV Output Format
+
+Each scraped CSV contains these columns (matching post-processor expectations):
+
+|Column         |Example                   |
+|---------------|--------------------------|
+|Job #          |6113                      |
+|Description    |Traffic Control - Milling |
+|Date           |11/13/25                  |
+|Times          |07:00-16:00               |
+|Customer       |PSE&G Gas (Oradell) MC 314|
+|Address        |Berry st/Railroad ave     |
+|Immediate Award|No                        |
+|Status         |Invoiced                  |
+
+-----
+
+## Typical Workflow
+
+1. **Weekly or bi-weekly:** Run scraper for current quarter
+2. **Monthly:** Update Dataset 2 text files for days you weren’t selected
+3. **Run post-processor:** Regenerates master Excel
+4. **Review:** Check award rate and trends
+
+-----
+
+## Contact for Issues
+
+If the portal structure changes significantly, the scraper may need updates to:
+
+- `find_date_input()` - Date field locators
+- `find_toggle_element()` - Toggle/checkbox locators
+- `find_job_grid()` - Grid table locators
+- `CONFIG["csv_columns"]` - If columns are added/removed

@@ -1,0 +1,40 @@
+// 🕒 2025-12-03-15-30-00
+// Extra_Duty/scripts/config.json
+// Author: R. A. Carucci
+// Purpose: Shared configuration for VCS Extra Duty scraper and post-processor - ensures path alignment and eliminates configuration drift
+{
+  "paths": {
+    "output_folder": "./data/raw_scraper_csv",
+    "dataset1_folder": "./data/dataset1",
+    "dataset2_folder": "./data/dataset2",
+    "log_folder": "./logs",
+    "output_excel_folder": "./output"
+  },
+  "scraper": {
+    "chrome_debugger_address": "127.0.0.1:9222",
+    "portal_url": "https://app10.vcssoftware.com/extra-duty-signup",
+    "page_load_timeout": 30,
+    "element_wait_timeout": 15,
+    "grid_refresh_wait": 3,
+    "action_delay": 0.5,
+    "max_retries": 3,
+    "retry_delay": 2,
+    "csv_pattern": "vcs_extra_duty_jobs*.csv",
+    "csv_columns": [
+      "Job #",
+      "Description",
+      "Date",
+      "Times",
+      "Customer",
+      "Address",
+      "Immediate Award",
+      "Status"
+    ]
+  },
+  "postprocessor": {
+    "my_name": "Carucci, Robert",
+    "target_year": 2025,
+    "output_filename": "TrafficJobs_2025_Master.xlsx",
+    "dedup_keys": ["Job #"]
+  }
+}
